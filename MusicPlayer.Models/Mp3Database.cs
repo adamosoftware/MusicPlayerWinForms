@@ -1,8 +1,10 @@
-﻿using Postulate.LocalFileDb;
+﻿using Dapper;
+using Postulate.LocalFileDb;
 using Postulate.LocalFileDb.Models;
 using Postulate.Orm.SqlCe;
 using System;
 using System.Data;
+using System.Data.SqlServerCe;
 
 namespace MusicPlayer.Models
 {
@@ -21,6 +23,11 @@ namespace MusicPlayer.Models
         {
             syntax.CreateTable<Playlist>(connection);
             syntax.CreateTable<PlaylistFile>(connection, true);
+        }
+
+        public T QuerySingle<T>(string query, object parameters = null)
+        {
+            return GetConnection().QuerySingle<T>(query, parameters);
         }
     }
 }
