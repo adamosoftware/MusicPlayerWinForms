@@ -1,9 +1,13 @@
 ﻿using AdamOneilSoftware;
 using MusicPlayer.Models;
 using System;
+using System.ComponentModel;
+using System.Data;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
+using static MusicPlayer.Models.Mp3Database;
 
 namespace MusicPlayer
 {
@@ -15,6 +19,8 @@ namespace MusicPlayer
         public frmMain()
         {
             InitializeComponent();
+            dgvSongGroups.AutoGenerateColumns = false;
+            dgvSongs.AutoGenerateColumns = false;
         }
 
         private void frmMain_Load(object sender, EventArgs e)
@@ -30,10 +36,12 @@ namespace MusicPlayer
                     _db = new Mp3Database(_options.MusicFolder);
                     tslMusicFolder.Text = _options.MusicFolder;
                     ShowDbMetrics();
+                    tbSearch.Enabled = true;
                 }
                 else
-                {
+                {                    
                     tslProgress.Text = "Please select music folder...";
+                    tbSearch.Enabled = false;
                 }                
             }
             catch (Exception exc)
@@ -63,6 +71,7 @@ namespace MusicPlayer
                     toolStripProgressBar1.Visible = false;
 
                     ShowDbMetrics();
+                    tbSearch.Enabled = true;
                 }
             }
             catch (Exception exc)
@@ -91,6 +100,70 @@ namespace MusicPlayer
             {
                 MessageBox.Show(exc.Message);
             }            
+        }
+
+        private void frmMain_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.F3)
+            {
+                e.Handled = true;
+                tbSearch.Focus();
+            }
+        }
+
+        private async void tbSearch_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                bool hideSearch = true;
+                if (tbSearch.Text.Length >= 2)
+                {
+                    hideSearch = false;
+                    toolStripProgressBar1.Visible = true;                    
+                    var songGroups = await _db.FindSongGroupsAsync(tbSearch.Text);
+
+                    BindingList<SongGroup> data = new BindingList<SongGroup>(songGroups.ToList());
+                    BindingSource bs = new BindingSource();
+                    bs.DataSource = data;
+                    dgvSongGroups.DataSource = bs;
+                }
+
+                splitContainer1.Panel1Collapsed = hideSearch;
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message);
+            }
+            finally
+            {
+                toolStripProgressBar1.Visible = false;
+            }
+        }
+
+        private async void dgvSongGroups_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                SongGroup sg = (dgvSongGroups.DataSource as BindingSource).Current as SongGroup;
+                if (sg != null)
+                {
+                    toolStripProgressBar1.Visible = true;
+                    using (var cn = _db.GetConnection())
+                    {
+                        var songs = await sg.GetSongsAsync(cn);
+                        BindingList<Mp3File> songList = new BindingList<Mp3File>(songs.ToList());
+                        dgvSongs.DataSource = songs;
+                    }
+                }
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message);
+            }
+            finally
+            {
+                toolStripProgressBar1.Visible = false;
+            }
         }
     }
 }
