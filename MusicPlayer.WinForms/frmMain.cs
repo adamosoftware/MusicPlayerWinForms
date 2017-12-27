@@ -65,19 +65,24 @@ namespace MusicPlayer
                     _options.MusicFolder = dlg.SelectedPath;
                     tslMusicFolder.Text = dlg.SelectedPath;
                     _db = new Mp3Database(_options.MusicFolder);
-                    IProgress<string> progress = new Progress<string>(ShowProgress);
-                    toolStripProgressBar1.Visible = true;
-                    await _db.FillAsync(progress);
-                    toolStripProgressBar1.Visible = false;
-
-                    ShowDbMetrics();
-                    tbSearch.Enabled = true;
+                    await AddNewMusic();
                 }
             }
             catch (Exception exc)
             {
                 MessageBox.Show(exc.Message);
             }
+        }
+
+        private async System.Threading.Tasks.Task AddNewMusic()
+        {
+            IProgress<string> progress = new Progress<string>(ShowProgress);
+            toolStripProgressBar1.Visible = true;
+            await _db.FillAsync(progress);
+            toolStripProgressBar1.Visible = false;
+
+            ShowDbMetrics();
+            tbSearch.Enabled = true;
         }
 
         private void ShowDbMetrics()
@@ -163,6 +168,18 @@ namespace MusicPlayer
             finally
             {
                 toolStripProgressBar1.Visible = false;
+            }
+        }
+
+        private async void lookForNewMusicToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                await AddNewMusic();
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message);
             }
         }
     }

@@ -51,6 +51,7 @@
             this.colSongArtists = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colAlbum = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colYear = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.lookForNewMusicToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -99,9 +100,10 @@
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.selectToolStripMenuItem,
-            this.viewToolStripMenuItem});
+            this.viewToolStripMenuItem,
+            this.lookForNewMusicToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(115, 48);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(183, 92);
             // 
             // selectToolStripMenuItem
             // 
@@ -274,6 +276,13 @@
             this.colYear.ReadOnly = true;
             this.colYear.Width = 57;
             // 
+            // lookForNewMusicToolStripMenuItem
+            // 
+            this.lookForNewMusicToolStripMenuItem.Name = "lookForNewMusicToolStripMenuItem";
+            this.lookForNewMusicToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
+            this.lookForNewMusicToolStripMenuItem.Text = "Look For New Music";
+            this.lookForNewMusicToolStripMenuItem.Click += new System.EventHandler(this.lookForNewMusicToolStripMenuItem_Click);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
@@ -327,6 +336,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colSongArtists;
         private System.Windows.Forms.DataGridViewTextBoxColumn colAlbum;
         private System.Windows.Forms.DataGridViewTextBoxColumn colYear;
+        private System.Windows.Forms.ToolStripMenuItem lookForNewMusicToolStripMenuItem;
     }
 }
 
