@@ -37,6 +37,7 @@
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.selectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.lookForNewMusicToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.tbSearch = new System.Windows.Forms.ToolStripTextBox();
             this.btnPlayPause = new System.Windows.Forms.ToolStripButton();
@@ -51,7 +52,6 @@
             this.colSongArtists = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colAlbum = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colYear = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.lookForNewMusicToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -103,21 +103,28 @@
             this.viewToolStripMenuItem,
             this.lookForNewMusicToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(183, 92);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(183, 70);
             // 
             // selectToolStripMenuItem
             // 
             this.selectToolStripMenuItem.Name = "selectToolStripMenuItem";
-            this.selectToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.selectToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
             this.selectToolStripMenuItem.Text = "Select...";
             this.selectToolStripMenuItem.Click += new System.EventHandler(this.selectToolStripMenuItem_Click);
             // 
             // viewToolStripMenuItem
             // 
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
-            this.viewToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.viewToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
             this.viewToolStripMenuItem.Text = "View";
             this.viewToolStripMenuItem.Click += new System.EventHandler(this.viewToolStripMenuItem_Click);
+            // 
+            // lookForNewMusicToolStripMenuItem
+            // 
+            this.lookForNewMusicToolStripMenuItem.Name = "lookForNewMusicToolStripMenuItem";
+            this.lookForNewMusicToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
+            this.lookForNewMusicToolStripMenuItem.Text = "Look For New Music";
+            this.lookForNewMusicToolStripMenuItem.Click += new System.EventHandler(this.lookForNewMusicToolStripMenuItem_Click);
             // 
             // toolStrip1
             // 
@@ -232,6 +239,7 @@
             this.dgvSongs.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvSongs.Size = new System.Drawing.Size(570, 131);
             this.dgvSongs.TabIndex = 0;
+            this.dgvSongs.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvSongs_CellDoubleClick);
             // 
             // colSongsTrackNum
             // 
@@ -275,13 +283,6 @@
             this.colYear.Name = "colYear";
             this.colYear.ReadOnly = true;
             this.colYear.Width = 57;
-            // 
-            // lookForNewMusicToolStripMenuItem
-            // 
-            this.lookForNewMusicToolStripMenuItem.Name = "lookForNewMusicToolStripMenuItem";
-            this.lookForNewMusicToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
-            this.lookForNewMusicToolStripMenuItem.Text = "Look For New Music";
-            this.lookForNewMusicToolStripMenuItem.Click += new System.EventHandler(this.lookForNewMusicToolStripMenuItem_Click);
             // 
             // frmMain
             // 

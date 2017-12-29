@@ -1,8 +1,8 @@
 ﻿using AdamOneilSoftware;
 using MusicPlayer.Models;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -15,6 +15,7 @@ namespace MusicPlayer
     {
         private Options _options;
         private Mp3Database _db;
+        private Mp3Player _player;
 
         public frmMain()
         {
@@ -39,10 +40,10 @@ namespace MusicPlayer
                     tbSearch.Enabled = true;
                 }
                 else
-                {                    
+                {
                     tslProgress.Text = "Please select music folder...";
                     tbSearch.Enabled = false;
-                }                
+                }
             }
             catch (Exception exc)
             {
@@ -86,8 +87,8 @@ namespace MusicPlayer
         }
 
         private void ShowDbMetrics()
-        {            
-            tslProgress.Text = $"{_db.QuerySingle<int>("SELECT COUNT(1) FROM [Mp3File]"):n0} songs";            
+        {
+            tslProgress.Text = $"{_db.QuerySingle<int>("SELECT COUNT(1) FROM [Mp3File]"):n0} songs";
         }
 
         private void ShowProgress(string obj)
@@ -104,7 +105,7 @@ namespace MusicPlayer
             catch (Exception exc)
             {
                 MessageBox.Show(exc.Message);
-            }            
+            }
         }
 
         private void frmMain_KeyDown(object sender, KeyEventArgs e)
@@ -124,7 +125,7 @@ namespace MusicPlayer
                 if (tbSearch.Text.Length >= 2)
                 {
                     hideSearch = false;
-                    toolStripProgressBar1.Visible = true;                    
+                    toolStripProgressBar1.Visible = true;
                     var songGroups = await _db.FindSongGroupsAsync(tbSearch.Text);
 
                     BindingList<SongGroup> data = new BindingList<SongGroup>(songGroups.ToList());
@@ -181,6 +182,29 @@ namespace MusicPlayer
             {
                 MessageBox.Show(exc.Message);
             }
+        }
+
+        private void dgvSongs_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                var songs = dgvSongs.DataSource as List<Mp3File>;
+                var songArray = songs.ToArray();
+
+                _player?.Stop();
+                _player = new Mp3Player(songArray);
+                _player.SongPlaying += ShowCurrentSong;
+                _player.Play(e.RowIndex);
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message);
+            }
+        }
+
+        private void ShowCurrentSong(object sender, EventArgs e)
+        {
+            Text = $"{_player.Current.Title} | {_player.Current.Artist} | {_player.Current.Album}";
         }
     }
 }
