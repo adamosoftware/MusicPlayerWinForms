@@ -11,8 +11,10 @@ namespace MusicPlayer.Controls
     {
         public SearchResultTreeView()
         {
-            InitializeComponent();
+            InitializeComponent();            
         }
+
+        public event EventHandler SongSearchClicked;
 
         public void Fill(IEnumerable<Search> results)
         {
@@ -30,12 +32,12 @@ namespace MusicPlayer.Controls
                     var nodes = item.Label.Split('|');
                     for (int index = 0; index < nodes.Length; index++)
                     {
-                        TreeNode ndChild = FindOrCreateNode(ndParent, nodes[index]);
-                        if (index == nodes.Length - 1)
-                        {
-                            ndChild.NodeFont = new Font(treeView1.Font, FontStyle.Bold);
-                            ndParent.Expand();
-                        }
+                        // the last node in the path is considered the search node that loads songs when clicked
+                        TreeNode ndChild = FindOrCreateNode(ndParent, nodes[index], (index == nodes.Length - 1));
+
+                        var songNode = ndChild as SongSearchNode;
+                        if (songNode != null) songNode.Search = item;
+
                         ndParent = ndChild;
                     }
                 }
@@ -44,17 +46,44 @@ namespace MusicPlayer.Controls
             treeView1.ExpandAll();
         }
 
-        private TreeNode FindOrCreateNode(TreeNode ndParent, string text)
+        private TreeNode FindOrCreateNode(TreeNode ndParent, string text, bool executeSearch)
         {
             foreach (TreeNode node in ndParent.Nodes)
             {
                 if (node.Text.Equals(text)) return node;
             }
 
-            TreeNode result = new TreeNode(text);
+            TreeNode result = (executeSearch) ? new SongSearchNode(text) : new TreeNode(text);
+
+            if (executeSearch)
+            {
+                result.NodeFont = new Font(treeView1.Font, FontStyle.Bold);
+            }
+
             ndParent.Nodes.Add(result);
 
             return result;
         }
+
+        private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            SongSearchNode node = e.Node as SongSearchNode;
+            if (node != null) SongSearchClicked?.Invoke(node, new EventArgs());
+        }
+
+        private void treeView1_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            SongSearchNode node = e.Node as SongSearchNode;
+            if (node != null) SongSearchClicked?.Invoke(node, new EventArgs());
+        }
+    }
+
+    public class SongSearchNode : TreeNode
+    {
+        public SongSearchNode(string text) : base(text)
+        {
+        }
+
+        public Search Search { get; set; }
     }
 }
