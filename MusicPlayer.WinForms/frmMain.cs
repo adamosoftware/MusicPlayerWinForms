@@ -20,7 +20,7 @@ namespace MusicPlayer
         public frmMain()
         {
             InitializeComponent();
-            dgvSongGroups.AutoGenerateColumns = false;
+            //dgvSongGroups.AutoGenerateColumns = false;
             dgvSongs.AutoGenerateColumns = false;
         }
 
@@ -126,12 +126,18 @@ namespace MusicPlayer
                 {
                     hideSearch = false;
                     toolStripProgressBar1.Visible = true;
-                    var songGroups = await _db.FindSongGroupsAsync(tbSearch.Text);
 
-                    BindingList<SongGroup> data = new BindingList<SongGroup>(songGroups.ToList());
-                    BindingSource bs = new BindingSource();
-                    bs.DataSource = data;
-                    dgvSongGroups.DataSource = bs;
+                    using (var cn = _db.GetConnection())
+                    {
+                        var artists = await _db.FindArtistsAsync(cn, tbSearch.Text);
+                        artistResults.Fill(artists);
+
+                        var albums = await _db.FindAlbumsAsync(cn, tbSearch.Text);
+                        albumResults.Fill(albums);
+
+                        var songs = await _db.FindSongsInAlbumAsync(cn, tbSearch.Text);
+                        songResults.Fill(songs);
+                    }                        
                 }
 
                 splitContainer1.Panel1Collapsed = hideSearch;
@@ -150,7 +156,8 @@ namespace MusicPlayer
         {
             try
             {
-                SongGroup sg = (dgvSongGroups.DataSource as BindingSource).Current as SongGroup;
+                /*
+                Search sg = (dgvSongGroups.DataSource as BindingSource).Current as Search;
                 if (sg != null)
                 {
                     toolStripProgressBar1.Visible = true;
@@ -161,6 +168,7 @@ namespace MusicPlayer
                         dgvSongs.DataSource = songs;
                     }
                 }
+                */
             }
             catch (Exception exc)
             {
