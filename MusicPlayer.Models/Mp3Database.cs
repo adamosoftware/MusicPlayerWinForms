@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlServerCe;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MusicPlayer.Models
@@ -32,19 +33,39 @@ namespace MusicPlayer.Models
             return GetConnection().QuerySingle<T>(query, parameters);
         }
 
+        public async Task<IEnumerable<ArtistSearch>> FindArtistsAsync(IDbConnection connection, string query)
+        {
+            return await connection.QueryAsync<ArtistSearch>("SELECT 'Artist' AS [Type], [Artist] AS [Label], COUNT(1) AS [SongCount], [Artist] AS [KeyValues] FROM [Mp3File] WHERE [Artist] LIKE '%'+@query+'%' GROUP BY [Artist] ORDER BY [Artist]", new { query = query });
+        }
+
+        public async Task<IEnumerable<AlbumSearch>> FindAlbumsAsync(IDbConnection connection, string query)
+        {
+            return await connection.QueryAsync<AlbumSearch>("SELECT 'Album' AS [Type], [Artist] + '|' + [Album] AS [Label], COUNT(1) AS [SongCount], [Album] + '|' + [Artist] AS [KeyValues] FROM [Mp3File] WHERE [Album] LIKE '%'+@query+'%' GROUP BY [Artist], [Album] ORDER BY [Artist], [Album]", new { query = query });
+        }
+
+        public async Task<IEnumerable<AlbumSearch>> FindSongsInAlbumAsync(IDbConnection connection, string query)
+        {
+            return await connection.QueryAsync<AlbumSearch>("SELECT 'Song' AS [Type], [Artist] + '|' + [Album] + '|' + [Title] AS [Label], -1 AS [SongCount], [Album] + '|' + [Artist] AS [KeyValues] FROM [Mp3File] WHERE [Title] LIKE '%'+@query+'%' ORDER BY [Title]", new { query = query });
+        }
+
+        public async Task<IEnumerable<PlaylistSongSearch>> FindSongsInPlaylistAsync(IDbConnection connection, string query)
+        {
+            return await connection.QueryAsync<PlaylistSongSearch>("SELECT 'Playlist' AS [Type], [Name] + '|' + [Artist] + '|' + [Title] AS [Label], -1 AS [SongCount], [pl].[Id] AS [KeyValues] FROM [Playlist] [pl] INNER JOIN [PlaylistFile] [pf] ON [pl].[Id]=[pf].[PlaylistId] INNER JOIN [Mp3File] [f] ON [pf].[SongId]=[f].[Id] WHERE [Name] LIKE '%'+@query+'%' ORDER BY [Name]", new { query = query });
+        }
+
         /// <summary>
         /// Finds one or more groups of songs that match the query. For example "lenno" matches Artist: Annie Lennox. "colors" matchest Album: Colors by Beck
         /// </summary>        
-        public async Task<IEnumerable<SongGroup>> FindSongGroupsAsync(string query)
+        public async Task<IEnumerable<Search>> FindSongGroupsAsync(string query)
         {
             using (var cn = GetConnection())
             {
-                var artists = await cn.QueryAsync<ArtistSongGroup>("SELECT 'Artist' AS [Type], [Artist] AS [Label], COUNT(1) AS [SongCount], [Artist] AS [KeyValues] FROM [Mp3File] WHERE [Artist] LIKE '%'+@query+'%' GROUP BY [Artist] ORDER BY [Artist]", new { query = query });
-                var albums = await cn.QueryAsync<AlbumSongGroup>("SELECT 'Album' AS [Type], [Artist] + ', ' + [Album] AS [Label], COUNT(1) AS [SongCount], [Album] + '|' + [Artist] AS [KeyValues] FROM [Mp3File] WHERE [Album] LIKE '%'+@query+'%' GROUP BY [Artist], [Album] ORDER BY [Artist], [Album]", new { query = query });
-                var songs = await cn.QueryAsync<AlbumSongGroup>("SELECT 'Song' AS [Type], [Artist] + ', ' + [Title] + ' (' + [Album] + ')' AS [Label], -1 AS [SongCount], [Album] + '|' + [Artist] AS [KeyValues] FROM [Mp3File] WHERE [Title] LIKE '%'+@query+'%' ORDER BY [Title]", new { query = query });
-                var playlists = await cn.QueryAsync<PlaylistSongGroup>("SELECT 'Playlist' AS [Type], [Name] AS [Label], -1 AS [SongCount], [Id] AS [KeyValues] FROM [Playlist] [pl] WHERE [Name] LIKE '%'+@query+'%' ORDER BY [Name]", new { query = query });
+                var artists = await FindArtistsAsync(cn, query);
+                var albums = await FindAlbumsAsync(cn, query);
+                var songs = await FindSongsInAlbumAsync(cn, query);
+                var playlists = await FindSongsInPlaylistAsync(cn, query);
 
-                List<SongGroup> results = new List<SongGroup>();
+                List<Search> results = new List<Search>();
                 results.AddRange(artists);
                 results.AddRange(albums);
                 results.AddRange(songs);
@@ -53,7 +74,14 @@ namespace MusicPlayer.Models
             }            
         }
 
-        public abstract class SongGroup
+        /*
+        private string WhereClausePhrase(string column, string query)
+        {
+            string[] words = query.Split(' ').Select(s => s.Trim()).ToArray();
+
+        }*/
+
+        public abstract class Search
         {
             /// <summary>
             /// Indicates Artist, Album, or Playlist
@@ -93,17 +121,17 @@ namespace MusicPlayer.Models
             }
         }
 
-        public class ArtistSongGroup : SongGroup
+        public class ArtistSearch : Search
         {
             public override string SongQuery => "SELECT * FROM [Mp3File] WHERE [Artist]=@param1 ORDER BY [Album], [TrackNumber]";            
         }
 
-        public class AlbumSongGroup : SongGroup
+        public class AlbumSearch : Search
         {
             public override string SongQuery => "SELECT * FROM [Mp3File] WHERE [Album]=@param1 AND [Artist]=@param2 ORDER BY [TrackNumber]";
         }
 
-        public class PlaylistSongGroup : SongGroup
+        public class PlaylistSongSearch : Search
         {
             public override string SongQuery => "SELECT * FROM [Mp3File] [mp3] WHERE EXISTS(SELECT 1 FROM [PlaylistFile] WHERE [PlaylistId]=@param1 AND [FileId]=[mp3].[Id])";
         }

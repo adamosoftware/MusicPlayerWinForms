@@ -1,4 +1,5 @@
 ﻿using AdamOneilSoftware;
+using MusicPlayer.Controls;
 using MusicPlayer.Models;
 using System;
 using System.Collections.Generic;
@@ -19,9 +20,38 @@ namespace MusicPlayer
 
         public frmMain()
         {
-            InitializeComponent();
-            dgvSongGroups.AutoGenerateColumns = false;
+            InitializeComponent();            
             dgvSongs.AutoGenerateColumns = false;
+
+            artistResults.SongSearchClicked += LoadSongsAsync;
+            albumResults.SongSearchClicked += LoadSongsAsync;
+            songResults.SongSearchClicked += LoadSongsAsync;
+        }
+
+        private async void LoadSongsAsync(object sender, EventArgs e)
+        {
+            try
+            {
+                SongSearchNode node = sender as SongSearchNode;
+                if (node != null)
+                {
+                    toolStripProgressBar1.Visible = true;
+                    using (var cn = _db.GetConnection())
+                    {
+                        var songs = await node.Search.GetSongsAsync(cn);
+                        BindingList<Mp3File> songList = new BindingList<Mp3File>(songs.ToList());
+                        dgvSongs.DataSource = songs;
+                    }
+                }
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message);
+            }
+            finally
+            {
+                toolStripProgressBar1.Visible = false;
+            }
         }
 
         private void frmMain_Load(object sender, EventArgs e)
@@ -126,41 +156,21 @@ namespace MusicPlayer
                 {
                     hideSearch = false;
                     toolStripProgressBar1.Visible = true;
-                    var songGroups = await _db.FindSongGroupsAsync(tbSearch.Text);
 
-                    BindingList<SongGroup> data = new BindingList<SongGroup>(songGroups.ToList());
-                    BindingSource bs = new BindingSource();
-                    bs.DataSource = data;
-                    dgvSongGroups.DataSource = bs;
+                    using (var cn = _db.GetConnection())
+                    {
+                        var artists = await _db.FindArtistsAsync(cn, tbSearch.Text);
+                        artistResults.Fill(artists);
+
+                        var albums = await _db.FindAlbumsAsync(cn, tbSearch.Text);
+                        albumResults.Fill(albums);
+
+                        var songs = await _db.FindSongsInAlbumAsync(cn, tbSearch.Text);
+                        songResults.Fill(songs);
+                    }                        
                 }
 
                 splitContainer1.Panel1Collapsed = hideSearch;
-            }
-            catch (Exception exc)
-            {
-                MessageBox.Show(exc.Message);
-            }
-            finally
-            {
-                toolStripProgressBar1.Visible = false;
-            }
-        }
-
-        private async void dgvSongGroups_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            try
-            {
-                SongGroup sg = (dgvSongGroups.DataSource as BindingSource).Current as SongGroup;
-                if (sg != null)
-                {
-                    toolStripProgressBar1.Visible = true;
-                    using (var cn = _db.GetConnection())
-                    {
-                        var songs = await sg.GetSongsAsync(cn);
-                        BindingList<Mp3File> songList = new BindingList<Mp3File>(songs.ToList());
-                        dgvSongs.DataSource = songs;
-                    }
-                }
             }
             catch (Exception exc)
             {
