@@ -56,7 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Postulate.Orm.LocalFileDb">
-      <Version>1.0.2-beta</Version>
+      <Version>1.0.4-beta</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

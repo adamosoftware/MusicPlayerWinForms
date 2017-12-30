@@ -5,8 +5,6 @@ using Postulate.Orm.SqlCe;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlServerCe;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MusicPlayer.Models
@@ -55,7 +53,7 @@ namespace MusicPlayer.Models
 
         /// <summary>
         /// Finds one or more groups of songs that match the query. For example "lenno" matches Artist: Annie Lennox. "colors" matchest Album: Colors by Beck
-        /// </summary>        
+        /// </summary>
         public async Task<IEnumerable<Search>> FindSongGroupsAsync(string query)
         {
             using (var cn = GetConnection())
@@ -71,14 +69,13 @@ namespace MusicPlayer.Models
                 results.AddRange(songs);
                 results.AddRange(playlists);
                 return results;
-            }            
+            }
         }
 
         /*
         private string WhereClausePhrase(string column, string query)
         {
             string[] words = query.Split(' ').Select(s => s.Trim()).ToArray();
-
         }*/
 
         public abstract class Search
@@ -123,7 +120,7 @@ namespace MusicPlayer.Models
 
         public class ArtistSearch : Search
         {
-            public override string SongQuery => "SELECT * FROM [Mp3File] WHERE [Artist]=@param1 ORDER BY [Album], [TrackNumber]";            
+            public override string SongQuery => "SELECT * FROM [Mp3File] WHERE [Artist]=@param1 ORDER BY [Album], [TrackNumber]";
         }
 
         public class AlbumSearch : Search

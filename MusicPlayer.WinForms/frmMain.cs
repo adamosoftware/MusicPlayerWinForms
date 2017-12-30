@@ -202,7 +202,7 @@ namespace MusicPlayer
                 var songArray = songs.ToArray();
 
                 _player?.Stop();
-                _player = new Mp3Player(songArray);
+                _player = new Mp3Player(_db.Path, songArray);
                 _player.SongPlaying += ShowCurrentSong;
                 _player.Play(e.RowIndex);
             }

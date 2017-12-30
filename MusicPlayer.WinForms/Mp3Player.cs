@@ -8,6 +8,7 @@ namespace MusicPlayer
     {
         // thanks to https://stackoverflow.com/a/15025797/2023653
 
+        private readonly string _basePath;
         private IWavePlayer _player;
         private AudioFileReader _reader;
         private int _index = 0;
@@ -18,8 +19,9 @@ namespace MusicPlayer
 
         public event EventHandler SongPlaying;
 
-        public Mp3Player(Mp3File[] songs)
+        public Mp3Player(string basePath, Mp3File[] songs)
         {
+            _basePath = basePath;
             _songs = songs;            
             _player = new WaveOut();
             _player.PlaybackStopped += PlaybackStopped;
@@ -42,7 +44,7 @@ namespace MusicPlayer
         {
             _current = _songs[index];           
 
-            _reader = new AudioFileReader(_current.Path);
+            _reader = new AudioFileReader(_current.FullPath(_basePath));
             _player.Init(_reader);
             _player.Play();
             SongPlaying?.Invoke(this, new EventArgs());

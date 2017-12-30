@@ -103,7 +103,7 @@
       <Version>1.8.4</Version>
     </PackageReference>
     <PackageReference Include="Postulate.Orm.LocalFileDb">
-      <Version>1.0.2-beta</Version>
+      <Version>1.0.4-beta</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
