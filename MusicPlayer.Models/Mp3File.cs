@@ -3,6 +3,9 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
+using Postulate.Orm.Abstract;
+using Postulate.Orm.Enums;
+using System.Data;
 
 namespace MusicPlayer.Models
 {
@@ -29,6 +32,15 @@ namespace MusicPlayer.Models
 
         public DateTime? LastPlayed { get; set; }
 
+        [MaxLength(300)]
+        public string SearchText { get; set; }
+
+        public override void BeforeSave(IDbConnection connection, SqlDb<int> db, SaveAction action)
+        {
+            base.BeforeSave(connection, db, action);
+            SearchText = Artist + "|" + Album + "|" + Title;
+        }
+
         public override void SetMetadata(FileInfo fileInfo)
         {
             if (!IsManuallyEdited)
@@ -46,7 +58,7 @@ namespace MusicPlayer.Models
                             Artist = tags[0].Artists;
                             Album = tags[0].Album;
                             TrackNumber = tags[0].Track.AsInt;
-                            Year = tags[0].Year.AsDateTime?.Year;
+                            Year = tags[0].Year.AsDateTime?.Year;                            
                         }
                     }
                 }

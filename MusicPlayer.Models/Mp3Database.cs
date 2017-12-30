@@ -5,6 +5,7 @@ using Postulate.Orm.SqlCe;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MusicPlayer.Models
@@ -49,6 +50,18 @@ namespace MusicPlayer.Models
         public async Task<IEnumerable<PlaylistSongSearch>> FindSongsInPlaylistAsync(IDbConnection connection, string query)
         {
             return await connection.QueryAsync<PlaylistSongSearch>("SELECT 'Playlist' AS [Type], [Name] + '|' + [Artist] + '|' + [Title] AS [Label], -1 AS [SongCount], [pl].[Id] AS [KeyValues] FROM [Playlist] [pl] INNER JOIN [PlaylistFile] [pf] ON [pl].[Id]=[pf].[PlaylistId] INNER JOIN [Mp3File] [f] ON [pf].[SongId]=[f].[Id] WHERE [Name] LIKE '%'+@query+'%' ORDER BY [Name]", new { query = query });
+        }
+
+        public async Task<IEnumerable<Mp3File>> FindSongsAsync(IDbConnection connection, string query)
+        {
+            string[] words = query.Split(' ').Select(s => s.Trim()).ToArray();
+            string whereClause = string.Join(" AND ", words.Select((w, index) => $"[SearchText] LIKE '%'+@word{index}+'%'"));
+            string sql = $"SELECT * FROM [Mp3File] WHERE {whereClause}";
+
+            DynamicParameters dp = new DynamicParameters();
+            for (int i = 0; i < words.Length; i++) dp.Add($"word{i}", words[i]);
+
+            return await connection.QueryAsync<Mp3File>(sql, dp);
         }
 
         /// <summary>
