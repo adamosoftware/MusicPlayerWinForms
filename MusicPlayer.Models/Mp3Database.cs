@@ -1,6 +1,8 @@
 ﻿using Dapper;
+using Newtonsoft.Json;
 using Postulate.LocalFileDb;
 using Postulate.LocalFileDb.Models;
+using Postulate.Orm;
 using Postulate.Orm.SqlCe;
 using System;
 using System.Collections.Generic;
@@ -57,11 +59,39 @@ namespace MusicPlayer.Models
 
         public async Task<IEnumerable<Mp3File>> FindSongsAsync(IDbConnection connection, string query)
         {
-            string[] words = query.Split(' ').Select(s => s.Trim()).ToArray();
-            string whereClause = string.Join(" AND ", words.Select((w, index) => $"[SearchText] LIKE '%{w}%'"));
-            string sql = $"SELECT * FROM [Mp3File] WHERE {whereClause} ORDER BY [Artist], [Album], [TrackNumber]";
+            string sql = "SELECT * FROM [Mp3File] WHERE ";
+
+            string jsonWhere;
+            if (IsJson(query, out jsonWhere))
+            {
+                sql += jsonWhere;
+            }
+            else
+            {
+                string[] words = query.Split(' ').Select(s => s.Trim()).ToArray();
+                string whereClause = string.Join(" AND ", words.Select((w) => $"[SearchText] LIKE '%{w}%'"));
+                sql += whereClause;
+            }
+
+            sql += " ORDER BY [Artist], [Album], [TrackNumber]";
 
             return await connection.QueryAsync<Mp3File>(sql);
+        }
+
+        private bool IsJson(string query, out string jsonWhere)
+        {
+            jsonWhere = null;
+
+            try
+            {
+                var criteria = JsonConvert.DeserializeObject<FilterCriteria>(query);
+                jsonWhere = criteria.GetCriteria();
+                return true;
+            }
+            catch 
+            {
+                return false;
+            }
         }
 
         /// <summary>

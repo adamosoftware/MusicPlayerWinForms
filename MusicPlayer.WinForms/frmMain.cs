@@ -1,14 +1,12 @@
 ﻿using AdamOneilSoftware;
-using MusicPlayer.Controls;
 using MusicPlayer.Models;
+using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using static MusicPlayer.Models.Mp3Database;
 
 namespace MusicPlayer
 {
@@ -17,11 +15,12 @@ namespace MusicPlayer
         private Options _options;
         private Mp3Database _db;
         private Mp3Player _player;
+        private Mp3File _song;
 
         public frmMain()
         {
-            InitializeComponent();            
-            dgvSongs.AutoGenerateColumns = false;            
+            InitializeComponent();
+            dgvSongs.AutoGenerateColumns = false;
         }
 
         private void frmMain_Load(object sender, EventArgs e)
@@ -122,15 +121,15 @@ namespace MusicPlayer
             try
             {
                 if (tbSearch.Text.Length >= 2)
-                {                    
+                {
                     toolStripProgressBar1.Visible = true;
                     using (var cn = _db.GetConnection())
                     {
                         var songs = await _db.FindSongsAsync(cn, tbSearch.Text);
                         BindingList<Mp3File> songList = new BindingList<Mp3File>(songs.ToList());
                         dgvSongs.DataSource = songList;
-                    }                        
-                }                
+                    }
+                }
             }
             catch (Exception exc)
             {
@@ -138,7 +137,7 @@ namespace MusicPlayer
             }
             finally
             {
-                toolStripProgressBar1.Visible = false;                
+                toolStripProgressBar1.Visible = false;
             }
         }
 
@@ -175,6 +174,42 @@ namespace MusicPlayer
         private void ShowCurrentSong(object sender, EventArgs e)
         {
             Text = $"{_player.Current.Title} | {_player.Current.Artist} | {_player.Current.Album}";
+        }
+
+        private void filterArtistToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                FilterCriteria criteria = new FilterCriteria() { Artist = _song.Artist };
+                string json = JsonConvert.SerializeObject(criteria);
+                tbSearch.Text = json;
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message);
+            }
+        }
+
+        private void dgvSongs_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {                
+                _song = dgvSongs.Rows[e.RowIndex].DataBoundItem as Mp3File;
+            }
+        }
+
+        private void filterAlbumToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                FilterCriteria criteria = new FilterCriteria() { Artist = _song.Artist, Album = _song.Album };
+                string json = JsonConvert.SerializeObject(criteria);
+                tbSearch.Text = json;
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message);
+            }
         }
     }
 }

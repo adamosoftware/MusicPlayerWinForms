@@ -47,10 +47,18 @@
             this.colSongArtists = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colAlbum = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colYear = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.filterArtistToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.filterAlbumToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewFileLocationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.playNowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.playNextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.statusStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvSongs)).BeginInit();
+            this.contextMenuStrip2.SuspendLayout();
             this.SuspendLayout();
             // 
             // statusStrip1
@@ -153,6 +161,7 @@
             this.colSongArtists,
             this.colAlbum,
             this.colYear});
+            this.dgvSongs.ContextMenuStrip = this.contextMenuStrip2;
             this.dgvSongs.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvSongs.Location = new System.Drawing.Point(0, 25);
             this.dgvSongs.MultiSelect = false;
@@ -163,6 +172,7 @@
             this.dgvSongs.Size = new System.Drawing.Size(570, 244);
             this.dgvSongs.TabIndex = 0;
             this.dgvSongs.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvSongs_CellDoubleClick);
+            this.dgvSongs.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgvSongs_CellMouseDown);
             // 
             // colSongsTrackNum
             // 
@@ -206,6 +216,55 @@
             this.colYear.ReadOnly = true;
             this.colYear.Width = 57;
             // 
+            // contextMenuStrip2
+            // 
+            this.contextMenuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.playNowToolStripMenuItem,
+            this.playNextToolStripMenuItem,
+            this.toolStripSeparator1,
+            this.filterArtistToolStripMenuItem,
+            this.filterAlbumToolStripMenuItem,
+            this.viewFileLocationToolStripMenuItem});
+            this.contextMenuStrip2.Name = "contextMenuStrip2";
+            this.contextMenuStrip2.Size = new System.Drawing.Size(170, 142);
+            // 
+            // filterArtistToolStripMenuItem
+            // 
+            this.filterArtistToolStripMenuItem.Name = "filterArtistToolStripMenuItem";
+            this.filterArtistToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.filterArtistToolStripMenuItem.Text = "Filter Artist";
+            this.filterArtistToolStripMenuItem.Click += new System.EventHandler(this.filterArtistToolStripMenuItem_Click);
+            // 
+            // filterAlbumToolStripMenuItem
+            // 
+            this.filterAlbumToolStripMenuItem.Name = "filterAlbumToolStripMenuItem";
+            this.filterAlbumToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.filterAlbumToolStripMenuItem.Text = "Filter Album";
+            this.filterAlbumToolStripMenuItem.Click += new System.EventHandler(this.filterAlbumToolStripMenuItem_Click);
+            // 
+            // viewFileLocationToolStripMenuItem
+            // 
+            this.viewFileLocationToolStripMenuItem.Name = "viewFileLocationToolStripMenuItem";
+            this.viewFileLocationToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.viewFileLocationToolStripMenuItem.Text = "View File Location";
+            // 
+            // playNowToolStripMenuItem
+            // 
+            this.playNowToolStripMenuItem.Name = "playNowToolStripMenuItem";
+            this.playNowToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.playNowToolStripMenuItem.Text = "Play Now";
+            // 
+            // playNextToolStripMenuItem
+            // 
+            this.playNextToolStripMenuItem.Name = "playNextToolStripMenuItem";
+            this.playNextToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.playNextToolStripMenuItem.Text = "Play Next";
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(166, 6);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
@@ -226,6 +285,7 @@
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvSongs)).EndInit();
+            this.contextMenuStrip2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -250,6 +310,13 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colSongArtists;
         private System.Windows.Forms.DataGridViewTextBoxColumn colAlbum;
         private System.Windows.Forms.DataGridViewTextBoxColumn colYear;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip2;
+        private System.Windows.Forms.ToolStripMenuItem filterArtistToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem filterAlbumToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem playNowToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem playNextToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem viewFileLocationToolStripMenuItem;
     }
 }
 
