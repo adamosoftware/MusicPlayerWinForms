@@ -54,6 +54,7 @@
             this.filterArtistToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.filterAlbumToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewFileLocationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tslSongCount = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -66,7 +67,8 @@
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tslMusicFolder,
             this.toolStripProgressBar1,
-            this.tslProgress});
+            this.tslProgress,
+            this.tslSongCount});
             this.statusStrip1.Location = new System.Drawing.Point(0, 269);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(570, 22);
@@ -226,7 +228,7 @@
             this.filterAlbumToolStripMenuItem,
             this.viewFileLocationToolStripMenuItem});
             this.contextMenuStrip2.Name = "contextMenuStrip2";
-            this.contextMenuStrip2.Size = new System.Drawing.Size(170, 142);
+            this.contextMenuStrip2.Size = new System.Drawing.Size(170, 120);
             // 
             // playNowToolStripMenuItem
             // 
@@ -265,6 +267,14 @@
             this.viewFileLocationToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.viewFileLocationToolStripMenuItem.Text = "View File Location";
             this.viewFileLocationToolStripMenuItem.Click += new System.EventHandler(this.viewFileLocationToolStripMenuItem_Click);
+            // 
+            // tslSongCount
+            // 
+            this.tslSongCount.Name = "tslSongCount";
+            this.tslSongCount.Size = new System.Drawing.Size(302, 17);
+            this.tslSongCount.Spring = true;
+            this.tslSongCount.Text = "toolStripStatusLabel1";
+            this.tslSongCount.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // frmMain
             // 
@@ -318,6 +328,7 @@
         private System.Windows.Forms.ToolStripMenuItem playNextToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem viewFileLocationToolStripMenuItem;
+        private System.Windows.Forms.ToolStripStatusLabel tslSongCount;
     }
 }
 

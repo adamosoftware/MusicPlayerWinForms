@@ -87,7 +87,7 @@ namespace MusicPlayer
 
         private void ShowDbMetrics()
         {
-            tslProgress.Text = $"{_db.QuerySingle<int>("SELECT COUNT(1) FROM [Mp3File]"):n0} songs";
+            tslSongCount.Text = $"{_db.QuerySingle<int>("SELECT COUNT(1) FROM [Mp3File]"):n0} songs";
         }
 
         private void ShowProgress(string obj)
@@ -128,6 +128,7 @@ namespace MusicPlayer
                         var songs = await _db.FindSongsAsync(cn, tbSearch.Text);
                         BindingList<Mp3File> songList = new BindingList<Mp3File>(songs.ToList());
                         dgvSongs.DataSource = songList;
+                        tslProgress.Text = $"{songList.Count:n0} songs";
                     }
                 }
             }
