@@ -1,14 +1,12 @@
 ﻿using AdamOneilSoftware;
-using MusicPlayer.Controls;
 using MusicPlayer.Models;
+using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using static MusicPlayer.Models.Mp3Database;
 
 namespace MusicPlayer
 {
@@ -17,41 +15,12 @@ namespace MusicPlayer
         private Options _options;
         private Mp3Database _db;
         private Mp3Player _player;
+        private Mp3File _song;
 
         public frmMain()
         {
-            InitializeComponent();            
+            InitializeComponent();
             dgvSongs.AutoGenerateColumns = false;
-
-            artistResults.SongSearchClicked += LoadSongsAsync;
-            albumResults.SongSearchClicked += LoadSongsAsync;
-            songResults.SongSearchClicked += LoadSongsAsync;
-        }
-
-        private async void LoadSongsAsync(object sender, EventArgs e)
-        {
-            try
-            {
-                SongSearchNode node = sender as SongSearchNode;
-                if (node != null)
-                {
-                    toolStripProgressBar1.Visible = true;
-                    using (var cn = _db.GetConnection())
-                    {
-                        var songs = await node.Search.GetSongsAsync(cn);
-                        BindingList<Mp3File> songList = new BindingList<Mp3File>(songs.ToList());
-                        dgvSongs.DataSource = songs;
-                    }
-                }
-            }
-            catch (Exception exc)
-            {
-                MessageBox.Show(exc.Message);
-            }
-            finally
-            {
-                toolStripProgressBar1.Visible = false;
-            }
         }
 
         private void frmMain_Load(object sender, EventArgs e)
@@ -151,26 +120,16 @@ namespace MusicPlayer
         {
             try
             {
-                bool hideSearch = true;
                 if (tbSearch.Text.Length >= 2)
                 {
-                    hideSearch = false;
                     toolStripProgressBar1.Visible = true;
-
                     using (var cn = _db.GetConnection())
                     {
-                        var artists = await _db.FindArtistsAsync(cn, tbSearch.Text);
-                        artistResults.Fill(artists);
-
-                        var albums = await _db.FindAlbumsAsync(cn, tbSearch.Text);
-                        albumResults.Fill(albums);
-
-                        var songs = await _db.FindSongsInAlbumAsync(cn, tbSearch.Text);
-                        songResults.Fill(songs);
-                    }                        
+                        var songs = await _db.FindSongsAsync(cn, tbSearch.Text);
+                        BindingList<Mp3File> songList = new BindingList<Mp3File>(songs.ToList());
+                        dgvSongs.DataSource = songList;
+                    }
                 }
-
-                splitContainer1.Panel1Collapsed = hideSearch;
             }
             catch (Exception exc)
             {
@@ -198,7 +157,7 @@ namespace MusicPlayer
         {
             try
             {
-                var songs = dgvSongs.DataSource as List<Mp3File>;
+                var songs = dgvSongs.DataSource as BindingList<Mp3File>;
                 var songArray = songs.ToArray();
 
                 _player?.Stop();
@@ -215,6 +174,42 @@ namespace MusicPlayer
         private void ShowCurrentSong(object sender, EventArgs e)
         {
             Text = $"{_player.Current.Title} | {_player.Current.Artist} | {_player.Current.Album}";
+        }
+
+        private void filterArtistToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                FilterCriteria criteria = new FilterCriteria() { Artist = _song.Artist };
+                string json = JsonConvert.SerializeObject(criteria);
+                tbSearch.Text = json;
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message);
+            }
+        }
+
+        private void dgvSongs_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {                
+                _song = dgvSongs.Rows[e.RowIndex].DataBoundItem as Mp3File;
+            }
+        }
+
+        private void filterAlbumToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                FilterCriteria criteria = new FilterCriteria() { Artist = _song.Artist, Album = _song.Album };
+                string json = JsonConvert.SerializeObject(criteria);
+                tbSearch.Text = json;
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message);
+            }
         }
     }
 }
