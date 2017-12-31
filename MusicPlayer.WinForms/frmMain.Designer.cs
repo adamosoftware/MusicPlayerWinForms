@@ -48,12 +48,12 @@
             this.colAlbum = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colYear = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.filterArtistToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.filterAlbumToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.viewFileLocationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.playNowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.playNextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.filterArtistToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.filterAlbumToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewFileLocationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -228,6 +228,23 @@
             this.contextMenuStrip2.Name = "contextMenuStrip2";
             this.contextMenuStrip2.Size = new System.Drawing.Size(170, 142);
             // 
+            // playNowToolStripMenuItem
+            // 
+            this.playNowToolStripMenuItem.Name = "playNowToolStripMenuItem";
+            this.playNowToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.playNowToolStripMenuItem.Text = "Play Now";
+            // 
+            // playNextToolStripMenuItem
+            // 
+            this.playNextToolStripMenuItem.Name = "playNextToolStripMenuItem";
+            this.playNextToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.playNextToolStripMenuItem.Text = "Play Next";
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(166, 6);
+            // 
             // filterArtistToolStripMenuItem
             // 
             this.filterArtistToolStripMenuItem.Name = "filterArtistToolStripMenuItem";
@@ -247,23 +264,7 @@
             this.viewFileLocationToolStripMenuItem.Name = "viewFileLocationToolStripMenuItem";
             this.viewFileLocationToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.viewFileLocationToolStripMenuItem.Text = "View File Location";
-            // 
-            // playNowToolStripMenuItem
-            // 
-            this.playNowToolStripMenuItem.Name = "playNowToolStripMenuItem";
-            this.playNowToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
-            this.playNowToolStripMenuItem.Text = "Play Now";
-            // 
-            // playNextToolStripMenuItem
-            // 
-            this.playNextToolStripMenuItem.Name = "playNextToolStripMenuItem";
-            this.playNextToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
-            this.playNextToolStripMenuItem.Text = "Play Next";
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(166, 6);
+            this.viewFileLocationToolStripMenuItem.Click += new System.EventHandler(this.viewFileLocationToolStripMenuItem_Click);
             // 
             // frmMain
             // 

@@ -211,5 +211,17 @@ namespace MusicPlayer
                 MessageBox.Show(exc.Message);
             }
         }
+
+        private void viewFileLocationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Shell.ViewFileLocation(_db.FullPath(_song));
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message);
+            }
+        }
     }
 }
