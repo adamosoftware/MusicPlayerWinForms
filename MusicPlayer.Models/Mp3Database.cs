@@ -6,12 +6,15 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MusicPlayer.Models
 {
     public class Mp3Database : Database<Folder, Mp3File>
     {
+        private bool _isBusy = false;
+
         public Mp3Database(string path) : base(path)
         {
             Options.IncludePatterns = new string[] { "*.mp3" };
@@ -55,13 +58,10 @@ namespace MusicPlayer.Models
         public async Task<IEnumerable<Mp3File>> FindSongsAsync(IDbConnection connection, string query)
         {
             string[] words = query.Split(' ').Select(s => s.Trim()).ToArray();
-            string whereClause = string.Join(" AND ", words.Select((w, index) => $"[SearchText] LIKE '%'+@word{index}+'%'"));
-            string sql = $"SELECT * FROM [Mp3File] WHERE {whereClause}";
+            string whereClause = string.Join(" AND ", words.Select((w, index) => $"[SearchText] LIKE '%{w}%'"));
+            string sql = $"SELECT * FROM [Mp3File] WHERE {whereClause} ORDER BY [Artist], [Album], [TrackNumber]";
 
-            DynamicParameters dp = new DynamicParameters();
-            for (int i = 0; i < words.Length; i++) dp.Add($"word{i}", words[i]);
-
-            return await connection.QueryAsync<Mp3File>(sql, dp);
+            return await connection.QueryAsync<Mp3File>(sql);
         }
 
         /// <summary>

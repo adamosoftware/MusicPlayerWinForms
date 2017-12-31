@@ -41,11 +41,6 @@
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.tbSearch = new System.Windows.Forms.ToolStripTextBox();
             this.btnPlayPause = new System.Windows.Forms.ToolStripButton();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.artistResults = new MusicPlayer.Controls.SearchResultTreeView();
-            this.albumResults = new MusicPlayer.Controls.SearchResultTreeView();
-            this.songResults = new MusicPlayer.Controls.SearchResultTreeView();
             this.dgvSongs = new System.Windows.Forms.DataGridView();
             this.colSongsTrackNum = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colSongTitle = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -55,11 +50,6 @@
             this.statusStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvSongs)).BeginInit();
             this.SuspendLayout();
             // 
@@ -151,68 +141,6 @@
             this.btnPlayPause.Size = new System.Drawing.Size(49, 22);
             this.btnPlayPause.Text = "Play";
             // 
-            // splitContainer1
-            // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 25);
-            this.splitContainer1.Name = "splitContainer1";
-            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitContainer1.Panel1
-            // 
-            this.splitContainer1.Panel1.Controls.Add(this.tableLayoutPanel1);
-            // 
-            // splitContainer1.Panel2
-            // 
-            this.splitContainer1.Panel2.Controls.Add(this.dgvSongs);
-            this.splitContainer1.Size = new System.Drawing.Size(570, 244);
-            this.splitContainer1.SplitterDistance = 109;
-            this.splitContainer1.TabIndex = 4;
-            // 
-            // tableLayoutPanel1
-            // 
-            this.tableLayoutPanel1.ColumnCount = 3;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel1.Controls.Add(this.artistResults, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.albumResults, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.songResults, 2, 0);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 1;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(570, 109);
-            this.tableLayoutPanel1.TabIndex = 0;
-            // 
-            // artistResults
-            // 
-            this.artistResults.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.artistResults.Font = new System.Drawing.Font("Verdana", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.artistResults.Location = new System.Drawing.Point(3, 3);
-            this.artistResults.Name = "artistResults";
-            this.artistResults.Size = new System.Drawing.Size(184, 103);
-            this.artistResults.TabIndex = 0;
-            // 
-            // albumResults
-            // 
-            this.albumResults.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.albumResults.Font = new System.Drawing.Font("Verdana", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.albumResults.Location = new System.Drawing.Point(193, 3);
-            this.albumResults.Name = "albumResults";
-            this.albumResults.Size = new System.Drawing.Size(184, 103);
-            this.albumResults.TabIndex = 1;
-            // 
-            // songResults
-            // 
-            this.songResults.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.songResults.Font = new System.Drawing.Font("Verdana", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.songResults.Location = new System.Drawing.Point(383, 3);
-            this.songResults.Name = "songResults";
-            this.songResults.Size = new System.Drawing.Size(184, 103);
-            this.songResults.TabIndex = 2;
-            // 
             // dgvSongs
             // 
             this.dgvSongs.AllowUserToAddRows = false;
@@ -226,13 +154,13 @@
             this.colAlbum,
             this.colYear});
             this.dgvSongs.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvSongs.Location = new System.Drawing.Point(0, 0);
+            this.dgvSongs.Location = new System.Drawing.Point(0, 25);
             this.dgvSongs.MultiSelect = false;
             this.dgvSongs.Name = "dgvSongs";
             this.dgvSongs.ReadOnly = true;
             this.dgvSongs.RowHeadersVisible = false;
             this.dgvSongs.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvSongs.Size = new System.Drawing.Size(570, 131);
+            this.dgvSongs.Size = new System.Drawing.Size(570, 244);
             this.dgvSongs.TabIndex = 0;
             this.dgvSongs.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvSongs_CellDoubleClick);
             // 
@@ -283,7 +211,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(570, 291);
-            this.Controls.Add(this.splitContainer1);
+            this.Controls.Add(this.dgvSongs);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.statusStrip1);
             this.Font = new System.Drawing.Font("Verdana", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -297,11 +225,6 @@
             this.contextMenuStrip1.ResumeLayout(false);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-            this.splitContainer1.ResumeLayout(false);
-            this.tableLayoutPanel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvSongs)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -320,13 +243,8 @@
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton btnPlayPause;
         private System.Windows.Forms.ToolStripTextBox tbSearch;
-        private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.DataGridView dgvSongs;
         private System.Windows.Forms.ToolStripMenuItem lookForNewMusicToolStripMenuItem;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private Controls.SearchResultTreeView artistResults;
-        private Controls.SearchResultTreeView albumResults;
-        private Controls.SearchResultTreeView songResults;
         private System.Windows.Forms.DataGridViewTextBoxColumn colSongsTrackNum;
         private System.Windows.Forms.DataGridViewTextBoxColumn colSongTitle;
         private System.Windows.Forms.DataGridViewTextBoxColumn colSongArtists;

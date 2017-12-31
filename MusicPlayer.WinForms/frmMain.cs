@@ -21,37 +21,7 @@ namespace MusicPlayer
         public frmMain()
         {
             InitializeComponent();            
-            dgvSongs.AutoGenerateColumns = false;
-
-            artistResults.SongSearchClicked += LoadSongsAsync;
-            albumResults.SongSearchClicked += LoadSongsAsync;
-            songResults.SongSearchClicked += LoadSongsAsync;
-        }
-
-        private async void LoadSongsAsync(object sender, EventArgs e)
-        {
-            try
-            {
-                SongSearchNode node = sender as SongSearchNode;
-                if (node != null)
-                {
-                    toolStripProgressBar1.Visible = true;
-                    using (var cn = _db.GetConnection())
-                    {
-                        var songs = await node.Search.GetSongsAsync(cn);
-                        BindingList<Mp3File> songList = new BindingList<Mp3File>(songs.ToList());
-                        dgvSongs.DataSource = songs;
-                    }
-                }
-            }
-            catch (Exception exc)
-            {
-                MessageBox.Show(exc.Message);
-            }
-            finally
-            {
-                toolStripProgressBar1.Visible = false;
-            }
+            dgvSongs.AutoGenerateColumns = false;            
         }
 
         private void frmMain_Load(object sender, EventArgs e)
@@ -151,26 +121,16 @@ namespace MusicPlayer
         {
             try
             {
-                bool hideSearch = true;
                 if (tbSearch.Text.Length >= 2)
-                {
-                    hideSearch = false;
+                {                    
                     toolStripProgressBar1.Visible = true;
-
                     using (var cn = _db.GetConnection())
                     {
-                        var artists = await _db.FindArtistsAsync(cn, tbSearch.Text);
-                        artistResults.Fill(artists);
-
-                        var albums = await _db.FindAlbumsAsync(cn, tbSearch.Text);
-                        albumResults.Fill(albums);
-
-                        var songs = await _db.FindSongsInAlbumAsync(cn, tbSearch.Text);
-                        songResults.Fill(songs);
+                        var songs = await _db.FindSongsAsync(cn, tbSearch.Text);
+                        BindingList<Mp3File> songList = new BindingList<Mp3File>(songs.ToList());
+                        dgvSongs.DataSource = songList;
                     }                        
-                }
-
-                splitContainer1.Panel1Collapsed = hideSearch;
+                }                
             }
             catch (Exception exc)
             {
@@ -178,7 +138,7 @@ namespace MusicPlayer
             }
             finally
             {
-                toolStripProgressBar1.Visible = false;
+                toolStripProgressBar1.Visible = false;                
             }
         }
 
@@ -198,7 +158,7 @@ namespace MusicPlayer
         {
             try
             {
-                var songs = dgvSongs.DataSource as List<Mp3File>;
+                var songs = dgvSongs.DataSource as BindingList<Mp3File>;
                 var songArray = songs.ToArray();
 
                 _player?.Stop();
